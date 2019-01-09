@@ -1,3 +1,6 @@
+from statistics import mean
+
+
 def parse_file(caminho, arquivo):
     try:
         file = open("{}/{}.txt".format(caminho, arquivo), 'r')
@@ -93,11 +96,24 @@ def calcula_melhor_volta(mapa, corrida=False):
     return melhor_volta_corrida
 
 
+def calcula_valodicade_media(mapa):
+    media_velocidade_piloto = []
+    for key, value in mapa.items():
+        medias = []
+        for volta in value['voltas']:
+            medias.append(float(volta['media'].replace(',', '.')))
+        media_calulada = mean(medias)
+        media_velocidade_piloto.append({'codigo': key, 'nome': value['nome'], 'media_velocidade': media_calulada})
+    return media_velocidade_piloto
+
+
 if __name__ == '__main__':
     parse_file(caminho='samples', arquivo='kart')
     mapa = prepara_resultados()
     resultado = finaliza_resultado(mapa)
     resultado_melhor_volta = calcula_melhor_volta(mapa, corrida=False)
+    media = calcula_valodicade_media(mapa)
 
     print(resultado)
     print(resultado_melhor_volta)
+    print(media)
