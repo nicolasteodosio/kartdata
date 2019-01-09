@@ -76,11 +76,28 @@ def finaliza_resultado(mapa):
     resultado_ordenado = sorted(resultado_prova, key=lambda k: (-k['qtd_voltas'], k['tempo_total_prova']))
     for index, resultado in enumerate(resultado_ordenado):
         resultado['posicao'] = index + 1
-    print(resultado_ordenado)
     return resultado_ordenado
+
+
+def calcula_melhor_volta(mapa, corrida=False):
+    melhor_volta_corrida = []
+    for key, value in mapa.items():
+        tempo_voltas = []
+        for volta in value['voltas']:
+            tempo_voltas.append(volta['tempo'])
+        min_tempo = min(tempo_voltas)
+        melhor_volta_corrida.append({'codigo': key, 'nome': value['nome'], 'melhor_volta': min_tempo})
+    if corrida:
+        return min(melhor_volta_corrida, key=lambda k: k['melhor_volta'])
+
+    return melhor_volta_corrida
 
 
 if __name__ == '__main__':
     parse_file(caminho='samples', arquivo='kart')
     mapa = prepara_resultados()
-    finaliza_resultado(mapa)
+    resultado = finaliza_resultado(mapa)
+    resultado_melhor_volta = calcula_melhor_volta(mapa, corrida=False)
+
+    print(resultado)
+    print(resultado_melhor_volta)

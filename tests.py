@@ -1,6 +1,6 @@
 from unittest import TestCase, mock
 
-from processar import parse_file, prepara_resultados, calcula_total_prova, finaliza_resultado
+from processar import parse_file, prepara_resultados, calcula_total_prova, finaliza_resultado, calcula_melhor_volta
 
 
 class TestParseFile(TestCase):
@@ -128,3 +128,50 @@ class TestFinalizaResultado(TestCase):
 
         self.assertRaises(Exception, finaliza_resultado, mapa)
 
+
+class TestCalculaMelhorVolta(TestCase):
+    def test_calcula_melhor_volta_por_piloto(self):
+        mapa = {'033': {'nome': 'R.BARRICHELLO',
+                        'voltas': [{'horario': '23:49:10.858',
+                                    'media': '43,243',
+                                    'numero': '1',
+                                    'tempo': '1:04.352'}]},
+                '038': {'nome': 'F.MASSA',
+                        'voltas': [{'horario': '23:49:08.277',
+                                    'media': '44,275',
+                                    'numero': '1',
+                                    'tempo': '1:02.852'},
+                                   {'horario': '23:49:08.277',
+                                    'media': '44,275',
+                                    'numero': '4',
+                                    'tempo': '1:02.852'}]}}
+        resultado = calcula_melhor_volta(mapa)
+        self.assertEqual(resultado, [{'codigo': '033', 'melhor_volta': '1:04.352', 'nome': 'R.BARRICHELLO'},
+                                     {'codigo': '038', 'melhor_volta': '1:02.852', 'nome': 'F.MASSA'}])
+
+    def test_calcula_melhor_volta_corrida(self):
+        mapa = {'033': {'nome': 'R.BARRICHELLO',
+                        'voltas': [{'horario': '23:49:10.858',
+                                    'media': '43,243',
+                                    'numero': '1',
+                                    'tempo': '1:04.352'}]},
+                '038': {'nome': 'F.MASSA',
+                        'voltas': [{'horario': '23:49:08.277',
+                                    'media': '44,275',
+                                    'numero': '1',
+                                    'tempo': '1:02.852'},
+                                   {'horario': '23:49:08.277',
+                                    'media': '44,275',
+                                    'numero': '4',
+                                    'tempo': '1:02.852'}]}}
+        resultado = calcula_melhor_volta(mapa, corrida=True)
+        self.assertEqual(resultado, {'codigo': '038', 'melhor_volta': '1:02.852', 'nome': 'F.MASSA'})
+
+    def test_calcula_melhor_volta_mapa_errado(self):
+        mapa = {'033': {'nome': 'R.BARRICHELLO',
+                        'voltas': [{ 'empo': '1:02.852'},
+                                   {'horario': '23:49:08.277',
+                                    'media': '44,275',
+                                    'numero': '4',
+                                    'tempo': '1:02.852'}]}}
+        self.assertRaises(Exception, calcula_melhor_volta, mapa)
