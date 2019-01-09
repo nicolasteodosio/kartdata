@@ -40,6 +40,47 @@ def prepara_resultados(completo=False, caminho='samples'):
     return mapa
 
 
+def calcula_total_prova(tempo_voltas):
+    minuto_total = 0
+    segundo_total = 0
+    milisegundo_total = 0
+
+    for tempo in tempo_voltas:
+        (minuto, segundo) = tempo.split(':')
+        (segundo, milisegundo) = segundo.split('.')
+        minuto_total += int(minuto)
+        segundo_total += int(segundo)
+        milisegundo_total += int(milisegundo)
+        if milisegundo_total >= 1000:
+            segundo_total += 1
+            milisegundo_total -= 1000
+        if segundo_total >= 60:
+            minuto_total += 1
+            segundo_total -= 60
+
+    return '{}:{}.{}'.format(minuto_total, segundo_total, milisegundo_total)
+
+
+def finaliza_resultado(mapa):
+    resultado_prova = []
+    for key, value in mapa.items():
+        tempo_voltas = []
+        for volta in value['voltas']:
+            tempo_voltas.append(volta['tempo'])
+        tempo_total = calcula_total_prova(tempo_voltas)
+        resultado_prova.append({'codigo': key,
+                                'nome': value['nome'],
+                                'qtd_voltas': len(value['voltas']),
+                                'tempo_total_prova': tempo_total
+                                })
+    resultado_ordenado = sorted(resultado_prova, key=lambda k: (-k['qtd_voltas'], k['tempo_total_prova']))
+    for index, resultado in enumerate(resultado_ordenado):
+        resultado['posicao'] = index + 1
+    print(resultado_ordenado)
+    return resultado_ordenado
+
+
 if __name__ == '__main__':
     parse_file(caminho='samples', arquivo='kart')
     mapa = prepara_resultados()
+    finaliza_resultado(mapa)
