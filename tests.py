@@ -1,3 +1,4 @@
+import unittest
 from unittest import TestCase, mock
 
 from processar import parse_file, prepara_resultados, calcula_total_prova, finaliza_resultado, calcula_melhor_volta, \
@@ -213,3 +214,7 @@ class TestCalculaVelocidadeMedia(TestCase):
                                         'numero': '4',
                                         'tempo': '1:02.852'}]}}
          self.assertRaises(Exception, calcula_velocidade_media, mapa)
+
+
+if __name__ == '__main__':
+    unittest.main()

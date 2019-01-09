@@ -111,9 +111,11 @@ if __name__ == '__main__':
     parse_file(caminho='samples', arquivo='kart')
     mapa = prepara_resultados()
     resultado = finaliza_resultado(mapa)
-    resultado_melhor_volta = calcula_melhor_volta(mapa, corrida=False)
+    resultado_melhor_volta = calcula_melhor_volta(mapa)
     media = calcula_velocidade_media(mapa)
-
+    print('########## RESULTADO CORRIDA ##########')
     print(resultado)
+    print('########## MELHOR VOLTA ##########')
     print(resultado_melhor_volta)
+    print('########## VELOCIDADE MEDIA ##########')
     print(media)
