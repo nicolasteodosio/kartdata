@@ -1,6 +1,7 @@
 from unittest import TestCase, mock
 
-from processar import parse_file, prepara_resultados, calcula_total_prova, finaliza_resultado, calcula_melhor_volta
+from processar import parse_file, prepara_resultados, calcula_total_prova, finaliza_resultado, calcula_melhor_volta, \
+    calcula_velocidade_media
 
 
 class TestParseFile(TestCase):
@@ -175,3 +176,40 @@ class TestCalculaMelhorVolta(TestCase):
                                     'numero': '4',
                                     'tempo': '1:02.852'}]}}
         self.assertRaises(Exception, calcula_melhor_volta, mapa)
+
+
+class TestCalculaVelocidadeMedia(TestCase):
+    def test_calcula_velocidade_media_sucesso(self):
+         mapa = {'033': {'nome': 'R.BARRICHELLO',
+                            'voltas': [{'horario': '23:49:10.858',
+                                        'media': '43,243',
+                                        'numero': '1',
+                                        'tempo': '1:04.352'}]},
+                    '038': {'nome': 'F.MASSA',
+                            'voltas': [{'horario': '23:49:08.277',
+                                        'media': '44,275',
+                                        'numero': '1',
+                                        'tempo': '1:02.852'},
+                                       {'horario': '23:49:08.277',
+                                        'media': '44,275',
+                                        'numero': '4',
+                                        'tempo': '1:02.852'}]}}
+         resultado = calcula_velocidade_media(mapa)
+         self.assertEqual(resultado, [{'codigo': '033', 'media_velocidade': 43.243, 'nome': 'R.BARRICHELLO'},
+                                      {'codigo': '038', 'media_velocidade': 44.275, 'nome': 'F.MASSA'}])
+
+    def test_calcula_velocidade_media_erro(self):
+         mapa = {'033': {'nome': 'R.BARRICHELLO',
+                            'voltas': [{'horario': '23:49:10.858',
+                                        'numero': '1',
+                                        'tempo': '1:04.352'}]},
+                    '038': {'nome': 'F.MASSA',
+                            'voltas': [{'horario': '23:49:08.277',
+                                        'media': '44,275',
+                                        'numero': '1',
+                                        'tempo': '1:02.852'},
+                                       {'horario': '23:49:08.277',
+                                        'media': 'teste',
+                                        'numero': '4',
+                                        'tempo': '1:02.852'}]}}
+         self.assertRaises(Exception, calcula_velocidade_media, mapa)

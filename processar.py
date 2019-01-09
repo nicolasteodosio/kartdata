@@ -96,7 +96,7 @@ def calcula_melhor_volta(mapa, corrida=False):
     return melhor_volta_corrida
 
 
-def calcula_valodicade_media(mapa):
+def calcula_velocidade_media(mapa):
     media_velocidade_piloto = []
     for key, value in mapa.items():
         medias = []
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     mapa = prepara_resultados()
     resultado = finaliza_resultado(mapa)
     resultado_melhor_volta = calcula_melhor_volta(mapa, corrida=False)
-    media = calcula_valodicade_media(mapa)
+    media = calcula_velocidade_media(mapa)
 
     print(resultado)
     print(resultado_melhor_volta)
